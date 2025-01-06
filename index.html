@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovative Chatbot</title>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://png.pngtree.com/background/20231018/original/pngtree-rendering-of-an-android-robot-with-chatbot-concept-and-raised-hand-picture-image_5596006.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            color: #ffcc00;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+        button, .mic-icon {
+            padding: 10px 20px;
+            background: #007bff;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+        button:hover, .mic-icon:hover {
+            background: #0056b3;
+        }
+        .mic-icon {
+            background: #28a745;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .mic-icon i {
+            font-size: 24px;
+            color: white;
+        }
+        .response-container {
+            margin-top: 20px;
+            text-align: left;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        function startVoiceRecognition() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "en-US";
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById("user_input").value = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Error occurred in speech recognition:", event.error);
+                alert("Voice recognition error: " + event.error);
+            };
+
+            recognition.onspeechend = () => {
+                recognition.stop();
+            };
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Your AI Assistant</h1>
+
+        <!-- Sentiment Analysis Section -->
+        <form id="chatForm" method="POST" action="/">
+            <textarea id="user_input" name="user_input" rows="4" placeholder="Type your message or use voice input..."></textarea>
+            <button type="submit">Send</button>
+            <div class="mic-icon" onclick="startVoiceRecognition()">
+                <i class="fa fa-microphone"></i>
+            </div>
+        </form>
+        <div class="response-container">
+            {% if user_input %}
+                <strong>You:</strong> {{ user_input }}<br>
+                <strong>Bot:</strong> {{ response }}
+            {% endif %}
+        </div>
+
+        <!-- Weather Section -->
+        <div class="section">
+            <h3>Check Weather</h3>
+            <form method="POST" action="/weather">
+                <input type="text" id="city" name="city" placeholder="Enter city name" required>
+                <button type="submit">Get Weather</button>
+            </form>
+            <div class="response-container">
+                {% if weather %}
+                    <h4>Weather Information:</h4>
+                    <p>{{ weather }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- ChatGPT Section -->
+        <div class="section">
+            <h3>Ask ChatGPT</h3>
+            <form method="POST" action="/chat">
+                <textarea id="chat_prompt" name="prompt" rows="3" placeholder="Ask ChatGPT anything..."></textarea>
+                <button type="submit">Ask</button>
+            </form>
+            <div class="response-container">
+                {% if chat_response %}
+                    <h4>ChatGPT Response:</h4>
+                    <p>{{ chat_response }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
