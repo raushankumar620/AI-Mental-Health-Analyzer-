@@ -11,7 +11,7 @@ import sqlite3
 import webbrowser
 
 # Initialize Flask App
-app = Flask(__name__)
+app = Flask(__name__) 
 
 # Initialize Text-to-Speech Engine
 def init_tts_engine():
@@ -130,7 +130,7 @@ def get_weather():
         else:
             weather_text = f"Temperature: {weather['temperature']}°C, Description: {weather['description']}"
         return render_template("index.html", weather=weather_text, user_input=None, response=None, chat_response=None)
-    return render_template("index.html", weather="City not provided", user_input=None, response=None, chat_response=None)
+    return render_template("index.html", weather="City not provided", user_input=None, response=None, chat_response=None) 
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -146,3 +146,4 @@ def chat():
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
+
